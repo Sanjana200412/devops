@@ -37,4 +37,4 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-The local database is stored at `data/tasks.db`. Set `DATABASE_PATH` to change it.
+The local database is stored at `data/tasks.db`. Set `DATABASE_PATH` to change it.11
