@@ -11,15 +11,28 @@ docker compose up --build
 
 Open the interactive API docs at <http://localhost:8000/docs>.
 
-## GitHub Actions
+## Deploy to Google Cloud Run
 
-The workflow builds the Docker image for pull requests targeting `main` and
-publishes it to GitHub Container Registry on pushes to `main`. Published images
-are tagged `latest` and with the commit SHA:
+The GitHub Actions workflow builds the image, pushes it to Artifact Registry,
+and deploys it to Cloud Run in `asia-south1` whenever code is pushed to `main`.
+The workflow uses Workload Identity Federation and does not require a stored
+service-account key. The GCP project and repository identifiers are configured
+in the workflow.
 
 ```sh
-docker pull ghcr.io/sanjana200412/devops:latest
+gcloud services enable artifactregistry.googleapis.com run.googleapis.com iamcredentials.googleapis.com sts.googleapis.com \
+  --project=project-f4388e1a-a3aa-4cdb-87e
+gcloud artifacts repositories create devops \
+  --repository-format=docker \
+  --location=asia-south1 \
+  --project=project-f4388e1a-a3aa-4cdb-87e
 ```
+
+The GitHub OIDC provider must trust only this repository's `main` branch. The
+deployer service account needs Artifact Registry Writer, Cloud Run Admin, and
+Service Account User permissions. The deployed service allows unauthenticated
+access. Its local SQLite database is ephemeral; use a managed database if task
+data must persist.
 
 ## Endpoints
 
