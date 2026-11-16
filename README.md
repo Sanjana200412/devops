@@ -11,6 +11,16 @@ docker compose up --build
 
 Open the interactive API docs at <http://localhost:8000/docs>.
 
+## GitHub Actions
+
+The workflow builds the Docker image for pull requests targeting `main` and
+publishes it to GitHub Container Registry on pushes to `main`. Published images
+are tagged `latest` and with the commit SHA:
+
+```sh
+docker pull ghcr.io/sanjana200412/devops:latest
+```
+
 ## Endpoints
 
 - `GET /health` — service status
